@@ -1,3 +1,4 @@
+using OnlineTravelAgency.Providers.Mahan.Consumers;
 using OnlineTravelAgency.Shared.RabbitMq;
 using RabbitMQ.Client;
 
@@ -36,6 +37,7 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
         }, stoppingToken, _logger);
 
 
+        // Without DLX
         await RabbitMqExtensions.WrapRabbitMqCallsWithRetryForEver(() =>
         {
             _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<ReserveFlightConsumer>
@@ -49,6 +51,25 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
                 },
                 QueueDetails = RabbitMqQueues.ReserveFlightQueue,
                 ExchangeDetails = RabbitMqExchanges.ReserveFlightExchange,
+            });
+        }, stoppingToken, _logger);
+
+
+        // With DLX
+        await RabbitMqExtensions.WrapRabbitMqCallsWithRetryForEver(() =>
+        {
+            _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<IssueTicketConsumer>
+            {
+                PrefetchCount = 15,
+                GlobalPrefetchCount = true,
+                AutoAcknowledgement = false, // quorum queues needs manual ack + publisher confirms
+                BindingDetails = new()
+                {
+                    RoutingKey = "Mahan"
+                },
+                QueueDetails = RabbitMqQueues.IssueTicketQueue,
+                ExchangeDetails = RabbitMqExchanges.IssueTicketExchange,
+                DeadLetterExchangeDetails = RabbitMqExchanges.IssueTicketDeadLetterExchange,
             });
         }, stoppingToken, _logger);
     }

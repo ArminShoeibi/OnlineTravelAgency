@@ -10,8 +10,8 @@ public static class RabbitMqQueues
         QueueName = "OnlineTravelAgency.Queues.AvailableFlightsRequest",
         QueueArguments = new Dictionary<string, object>()
         {
-            {Headers.XQueueType, "classic"}, // HA
-            {Headers.XMessageTTL, 90_000} , // Since RabbitMQ 3.10 with quorum
+            {Headers.XQueueType, "classic"},
+            {Headers.XMessageTTL, 90_000}
         }
     };
 
@@ -27,9 +27,39 @@ public static class RabbitMqQueues
 
             ///https://dradoaica.blogspot.com/2020/03/poison-message-handling-rabbitmq.html
             /// and needs **Idempotency** if you don't have Idempotency put 0 for the value or if you prefer retry put 1 or greater than 1
-            {"x-delivery-limit", 1},  
+            {"x-delivery-limit", 1},
 
             {"x-queue-leader-locator", "balanced"},
+        }
+    };
+
+    public static RabbitMqQueue IssueTicketQueue = new()
+    {
+        AutoDelete = false,
+        Durable = true,
+        QueueName = "OnlineTravelAgency.Queues.IssueTicketQueue",
+        QueueArguments = new Dictionary<string, object>()
+        {
+            {Headers.XQueueType, "quorum"},
+            {Headers.XMessageTTL, 340_000},
+            {"x-delivery-limit", 0},
+            {"x-queue-leader-locator", "balanced"},
+        }
+    };
+
+    public static RabbitMqQueue IssueTicketDeadLetterQueue = new()
+    {
+        AutoDelete = false,
+        Durable = true,
+        QueueName = "OnlineTravelAgency.Queues.IssueTicketQueue.DLX",
+        QueueArguments = new Dictionary<string, object>()
+        {
+            {Headers.XQueueType, "quorum"},
+            {"x-delivery-limit", 1},
+            {"x-queue-leader-locator", "balanced"},
+
+            {Headers.XOverflow, "reject-publish"},
+            {"x-dead-letter-strategy", "at-least-once"}
         }
     };
 }
@@ -50,5 +80,21 @@ public static class RabbitMqExchanges
         AutoDelete = false,
         Durable = true,
         ExchangeType = ExchangeType.Direct,
+    };
+
+    public static RabbitMqExchange IssueTicketExchange = new()
+    {
+        ExchangeName = "OnlineTravelAgency.Exchanges.IssueTicketExchange",
+        AutoDelete = false,
+        Durable = true,
+        ExchangeType = ExchangeType.Direct,
+    };
+
+    public static RabbitMqExchange IssueTicketDeadLetterExchange = new()
+    {
+        ExchangeName = "OnlineTravelAgency.Exchanges.IssueTicketExchange.DLX",
+        AutoDelete = false,
+        Durable = true,
+        ExchangeType = ExchangeType.Fanout,
     };
 }

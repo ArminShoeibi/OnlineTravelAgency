@@ -3,7 +3,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
 
-namespace OnlineTravelAgency.Providers.Mahan;
+namespace OnlineTravelAgency.Providers.Mahan.Consumers;
 
 internal class AvailableFlightsRequestConsumer : AsyncEventingBasicConsumer
 {

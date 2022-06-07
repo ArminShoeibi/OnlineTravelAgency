@@ -1,7 +1,7 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace OnlineTravelAgency.Providers.Mahan;
+namespace OnlineTravelAgency.Providers.Mahan.Consumers;
 internal class ReserveFlightConsumer : AsyncEventingBasicConsumer
 {
     private readonly ILogger<ReserveFlightConsumer> logger;
