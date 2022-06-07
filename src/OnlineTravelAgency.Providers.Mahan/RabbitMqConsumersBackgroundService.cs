@@ -35,5 +35,21 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
             });
         }, stoppingToken, _logger);
 
+
+        await RabbitMqExtensions.WrapRabbitMqCallsWithRetryForEver(() =>
+        {
+            _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<>
+            {
+                PrefetchCount = 15,
+                GlobalPrefetchCount = true,
+                AutoAcknowledgement = false, // quorum queue needs manual ack + publisher confirms
+                BindingDetails = new()
+                {
+                    RoutingKey = "Mahan"
+                },
+                QueueDetails = RabbitMqQueues.ReserveFlightQueue,
+                ExchangeDetails = RabbitMqExchanges.ReserveFlightExchange,
+            });
+        }, stoppingToken, _logger);
     }
 }

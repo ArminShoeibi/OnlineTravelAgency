@@ -23,7 +23,7 @@ internal class AvailableFlightsRequestConsumer : AsyncEventingBasicConsumer
                                             ReadOnlyMemory<byte> body)
     {
         var avRequest = JsonSerializer.Deserialize<AvailableFlightsRequestDto>(body.Span);
-        _logger.LogInformation("Available flights request: {AvailableFlightsRequestDto}", avRequest); // you can do this because it is a record class
+        _logger.LogInformation("Available flights request: {AvailableFlightsRequestDto}", avRequest); // We can do this because it is a record class
         return Task.CompletedTask;
     }
 }

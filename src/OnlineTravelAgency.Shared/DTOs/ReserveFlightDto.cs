@@ -3,7 +3,15 @@
 public record class ReserveFlightDto
 {
     public string FlightId { get; init; }
-    public DateTimeOffset DepartureDate { get; init; } // you need to equal departure date when reserving a flight
-    public
-                                                      
+    public string ProviderId { get; init; }
+    public DateTimeOffset DateCreated { get; init; }
+    public List<Passenger> Passengers { get; init; }
+}
+public record class Passenger
+{
+    public string FirstName { get; init; }
+    public string LastName { get; init; }
+    public DateOnly BirthDate { get; init; }
+    public string NationalId { get; init; } // conver this to a ValueObjet
+    public string PassportId { get; init; } // conver this to a ValueObjet
 }
