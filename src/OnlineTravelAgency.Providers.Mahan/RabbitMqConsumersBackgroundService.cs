@@ -43,7 +43,7 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
             _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<ReserveFlightConsumer>
             {
                 PrefetchCount = 15,
-                GlobalPrefetchCount = true,
+                GlobalPrefetchCount = false, // you can't turn on global prefetch count with quorom queues
                 AutoAcknowledgement = false, // quorum queues needs manual ack + publisher confirms
                 BindingDetails = new()
                 {

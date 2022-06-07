@@ -25,7 +25,7 @@ public class RabbitMqConsumersBackgroundService : BackgroundService
             _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<IssueTicketDeadLetterConsumer>
             {
                 PrefetchCount = 15,
-                GlobalPrefetchCount = true,
+                GlobalPrefetchCount = false,
                 AutoAcknowledgement = false,
                 BindingDetails = new()
                 {
