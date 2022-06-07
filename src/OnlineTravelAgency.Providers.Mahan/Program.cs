@@ -11,6 +11,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services.AddRabbitMqAmqpConnection("Mahan");
         services.AddHostedService<RabbitMqConsumersBackgroundService>();
+        services.AddSingleton<RabbitMqPublisher>();
     })
     .Build();
 

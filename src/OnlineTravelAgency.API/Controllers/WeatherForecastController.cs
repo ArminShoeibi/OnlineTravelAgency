@@ -1,32 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
+using OnlineTravelAgency.Shared.DTOs;
+using OnlineTravelAgency.Shared.RabbitMq;
 
 namespace OnlineTravelAgency.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class TestRabbitPublisher : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    private readonly ILogger<TestRabbitPublisher> _logger;
+    private readonly RabbitMqPublisher _rabbitMqPublisher;
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public TestRabbitPublisher(ILogger<TestRabbitPublisher> logger, RabbitMqPublisher rabbitMqPublisher)
     {
         _logger = logger;
+        this._rabbitMqPublisher = rabbitMqPublisher;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+
+    [HttpPost("[action]")]
+    public IActionResult PublishAvailableFlightsRequest(AvailableFlightsRequestDto availableFlightsRequestDto)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        Jsonseri
+        _rabbitMqPublisher.Publish()
     }
 }
