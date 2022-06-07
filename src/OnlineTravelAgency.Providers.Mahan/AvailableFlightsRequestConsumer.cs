@@ -1,12 +1,17 @@
-﻿using RabbitMQ.Client;
+﻿using OnlineTravelAgency.Shared.DTOs;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text.Json;
 
 namespace OnlineTravelAgency.Providers.Mahan;
 
 internal class AvailableFlightsRequestConsumer : AsyncEventingBasicConsumer
 {
-    public AvailableFlightsRequestConsumer(IModel model) : base(model)
+    private readonly ILogger<AvailableFlightsRequestConsumer> _logger;
+
+    public AvailableFlightsRequestConsumer(IModel model, ILogger<AvailableFlightsRequestConsumer> logger) : base(model)
     {
+        _logger = logger;
     }
 
     public override Task HandleBasicDeliver(string consumerTag,
@@ -17,6 +22,8 @@ internal class AvailableFlightsRequestConsumer : AsyncEventingBasicConsumer
                                             IBasicProperties properties,
                                             ReadOnlyMemory<byte> body)
     {
-        return base.HandleBasicDeliver(consumerTag, deliveryTag, redelivered, exchange, routingKey, properties, body);
+        var avRequest = JsonSerializer.Deserialize<AvailableFlightsRequestDto>(body.Span);
+        _logger.LogInformation("Available flights request: {AvailableFlightsRequestDto}", avRequest); // you can do this because it is a record class
+        return Task.CompletedTask;
     }
 }
