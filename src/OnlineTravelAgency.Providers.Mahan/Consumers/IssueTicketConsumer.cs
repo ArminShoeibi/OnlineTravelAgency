@@ -4,7 +4,10 @@ using RabbitMQ.Client.Events;
 namespace OnlineTravelAgency.Providers.Mahan.Consumers;
 internal class IssueTicketConsumer : AsyncEventingBasicConsumer
 {
-    public IssueTicketConsumer(IModel model) : base(model)
+    private readonly ILogger<IssueTicketConsumer> _logger;
+
+    public IssueTicketConsumer(IModel model, ILogger<IssueTicketConsumer> logger) : base(model)
     {
+        this._logger = logger;
     }
 }

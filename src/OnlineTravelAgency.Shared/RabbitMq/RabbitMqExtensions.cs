@@ -121,7 +121,7 @@ public static class RabbitMqExtensions
             }
             catch (Exception ex)
             {
-                logger.LogCritical(ex, "RabbitMQ has some connection issue");
+                logger.LogCritical(ex, "RabbitMQ has some connection issues");
             }
             await Task.Delay(3000);
         }
