@@ -24,7 +24,11 @@ public static class RabbitMqQueues
         {
             {Headers.XQueueType, "quorum"}, // HA
             {Headers.XMessageTTL, 240_000} , // Since RabbitMQ 3.10 with quorum
-            {"x-delivery-limit", 1},// https://dradoaica.blogspot.com/2020/03/poison-message-handling-rabbitmq.html and needs **Idempotency** if you don't have Idempotency put 0 for the value
+
+            ///https://dradoaica.blogspot.com/2020/03/poison-message-handling-rabbitmq.html
+            /// and needs **Idempotency** if you don't have Idempotency put 0 for the value or if you prefer retry put 1 or greater than 1
+            {"x-delivery-limit", 1},  
+
             {"x-queue-leader-locator", "balanced"},
         }
     };

@@ -38,11 +38,11 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
 
         await RabbitMqExtensions.WrapRabbitMqCallsWithRetryForEver(() =>
         {
-            _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<>
+            _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<ReserveFlightConsumer>
             {
                 PrefetchCount = 15,
                 GlobalPrefetchCount = true,
-                AutoAcknowledgement = false, // quorum queue needs manual ack + publisher confirms
+                AutoAcknowledgement = false, // quorum queues needs manual ack + publisher confirms
                 BindingDetails = new()
                 {
                     RoutingKey = "Mahan"
