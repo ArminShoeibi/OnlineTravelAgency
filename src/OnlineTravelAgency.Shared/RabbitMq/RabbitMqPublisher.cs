@@ -23,8 +23,27 @@ public class RabbitMqPublisher
     }
 
 
-    public void Publish(byte[] message, string exchangeName, string routingKey, bool publisherConfirms)
+    public void Publish(byte[] message,
+                        string exchangeName,
+                        string routingKey,
+                        bool publisherConfirms,
+                        IDictionary<string, object> basicProps,
+                        IDictionary<string, object> pollyContextData = null)
     {
 
+        PolicyResult policyResult = _retryPolicy.ExecuteAndCapture((context) =>
+        {
+
+
+        }, pollyContextData);
+
+        if (policyResult.Outcome == OutcomeType.Successful)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }
