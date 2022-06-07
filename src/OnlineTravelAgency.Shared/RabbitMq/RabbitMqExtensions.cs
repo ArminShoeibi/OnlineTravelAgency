@@ -98,4 +98,32 @@ public static class RabbitMqExtensions
                                     arguments: rabbitMqExchange.ExchangeArguments);
     }
 
+    public static async Task WrapRabbitMqCallsWithRetryForEver(Action action, CancellationToken cancellationToken, ILogger logger)
+    {
+        while (cancellationToken.IsCancellationRequested is false)
+        {
+            try
+            {
+                action();
+                break;
+            }
+            catch (BrokerUnreachableException ex)
+            {
+                logger.LogCritical(ex, "Unable to open an AMQP connection for RabbitMQ");
+            }
+            catch (AlreadyClosedException ex)
+            {
+                logger.LogCritical(ex, "Connection was opened but couldn't open a new AMQP channel for RabbitMQ");
+            }
+            catch (OperationInterruptedException ex)
+            {
+                logger.LogCritical(ex, "We have some problems in configure section (declaring queues)");
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical(ex, "RabbitMQ has some connection issue");
+            }
+            await Task.Delay(3000);
+        }
+    }
 }

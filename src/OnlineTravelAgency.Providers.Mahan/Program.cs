@@ -9,9 +9,8 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices(services =>
     {
-
         services.AddRabbitMqAmqpConnection("Mahan");
-        services.AddHostedService<Worker>();
+        services.AddHostedService<RabbitMqConsumersBackgroundService>();
     })
     .Build();
 
