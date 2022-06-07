@@ -1,3 +1,4 @@
+using OnlineTravelAgency.API;
 using OnlineTravelAgency.Shared.RabbitMq;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddRabbitMqAmqpConnection("API");
+builder.Services.AddHostedService<RabbitMqConsumersBackgroundService>();
 
 var app = builder.Build();
 
