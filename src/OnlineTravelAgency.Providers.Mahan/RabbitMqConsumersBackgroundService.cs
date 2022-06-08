@@ -61,7 +61,7 @@ internal class RabbitMqConsumersBackgroundService : BackgroundService
             _amqpConnection.CreateConsumer(_serviceProvider, new RabbitMqConsumer<IssueTicketConsumer>
             {
                 PrefetchCount = 15,
-                GlobalPrefetchCount = true,
+                GlobalPrefetchCount = false,
                 AutoAcknowledgement = false, // quorum queues needs manual ack + publisher confirms
                 BindingDetails = new()
                 {
